@@ -5,12 +5,9 @@ metadata:
   labels:
     app: mysql
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 3306
-    targetPort: 3306
-    nodePort: 3306
-    protocol: TCP
     name: mysql
   selector:
     app: mysql
@@ -20,7 +17,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql
+  name: mysql-pv-claim
   labels:
     app: mysql
 spec:
@@ -38,6 +35,8 @@ metadata:
   labels:
     app: mysql
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: mysql
@@ -50,6 +49,15 @@ spec:
       - name: mysql
         image: mysql-image
         imagePullPolicy: Never
+        env:
+        - name: DB_NAME
+          value: wordpress
+        - name: DB_USER
+          value: mysql
+        - name: DB_PASS
+          value: pass
+        - name: MYSQL_HOME
+          value: "/etc/"
         ports:
         - containerPort: 3306
           name: mysql
@@ -59,4 +67,4 @@ spec:
       volumes:
       - name: mysql
         persistentVolumeClaim:
-          claimName: mysql
+          claimName: mysql-pv-claim
