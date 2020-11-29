@@ -12,7 +12,7 @@ minikube dashboard &
 eval $(minikube docker-env)
 
 IP=$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)
-printf "Minikube IP: ${IP}"
+printf "Minikube IP: ${IP}\n"
 kubectl apply -f ./srcs/configmap.yaml
 docker build -t nginx-image ./srcs/nginx
 kubectl apply -f ./srcs/nginx.yaml
@@ -20,3 +20,5 @@ docker build -t mysql-image ./srcs/mysql
 kubectl apply -f ./srcs/mysql.yaml
 docker build -t wordpress-image ./srcs/wordpress
 kubectl apply -f ./srcs/wordpress.yaml
+docker build -t phpmyadmin-image ./srcs/phpmyadmin
+kubectl apply -f ./srcs/phpmyadmin.yaml
