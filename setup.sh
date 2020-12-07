@@ -1,7 +1,7 @@
 #!/bin/sh
-echo "Starting docker daemon."
-docker-machine create --driver virtualbox default
-eval "$(docker-machine env default)"
+#echo "Starting docker daemon."
+#docker-machine create --driver virtualbox default
+#eval "$(docker-machine env default)"
 echo "Starting minikube."
 minikube start --vm-driver=virtualbox
 minikube addons enable metallb
@@ -22,3 +22,11 @@ docker build -t wordpress-image ./srcs/wordpress
 kubectl apply -f ./srcs/wordpress.yaml
 docker build -t phpmyadmin-image ./srcs/phpmyadmin
 kubectl apply -f ./srcs/phpmyadmin.yaml
+docker build -t ftps-image ./srcs/ftps
+kubectl apply -f ./srcs/ftps.yaml
+docker build -t telegraf-image ./srcs/telegraf
+kubectl apply -f ./srcs/telegraf.yaml
+docker build -t influxdb-image ./srcs/influxdb
+kubectl apply -f ./srcs/influxdb.yaml
+docker build -t grafana-image ./srcs/grafana
+kubectl apply -f ./srcs/grafana.yaml
