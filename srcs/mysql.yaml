@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
+  name: mysql-svc
   labels:
     app: mysql
 spec:
+  type: ClusterIP
   ports:
   - port: 3306
     targetPort: 3306
@@ -49,15 +50,6 @@ spec:
       - name: mysql
         image: mysql-image
         imagePullPolicy: Never
-        env:
-        - name: DB_NAME
-          value: wordpress
-        - name: DB_USER
-          value: mysql
-        - name: DB_PASS
-          value: pass
-        - name: MYSQL_HOME
-          value: "/etc/"
         ports:
         - containerPort: 3306
           name: mysql

@@ -9,7 +9,7 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./supervisord.conf /etc/supervisord.conf
 
 RUN	adduser -D user
-RUN	echo "user:password"|chpasswd
+RUN	echo "user:pass"|chpasswd
 RUN ssh-keygen -A
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=RU/ST=Kazan/L=Kazan/O=42/CN=ztawanna' -keyout /etc/ssl/certs/self.key -out /etc/ssl/certs/self.crt
 

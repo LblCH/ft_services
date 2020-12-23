@@ -1,16 +1,19 @@
 #! /bin/sh
-# Init DB
-/usr/bin/mysql_install_db --user=mysql --datadir="/var/lib/mysql"
-/usr/bin/mysqld_safe --datadir="/var/lib/mysql"
 
-sleep (2)
-echo "CREATE DATABASE IF NOT EXISTS $DB_NAME;" | mysql -u root
-echo "CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS';" | mysql -u root
-echo "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS' WITH GRANT OPTION;" | mysql -u root
-echo "update mysql.user set plugin='mysql_native_password' where user='$DB_USER';" | mysql -u root
-echo "DROP DATABASE test" | mysql -u root --skip-password
-echo "FLUSH PRIVILEGES;" | mysql -u root --skip-password
-mysql wordpress -u root --password=  < wordpress.sql
+# Install MariaDB database(mariadb-install-db is a symlink to mysql_install_db).
+mariadb-install-db -u root
 
-sed -i 's/skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
-# telegraf &
+# Invoking "mysqld" will start the MySQL server. Terminating "mysqld" will shutdown the MySQL server.
+mysqld -u root & sleep 5
+
+# Create Wordpress database.
+mysql -u root --execute="CREATE DATABASE wordpress;"
+
+# Import previously backed up database to MariaDB database server (wordpress < /wordpress.sql).
+mysql -u root wordpress < wordpress.sql
+
+# Create new user "root" with password "toor" and give permissions.
+mysql -u root --execute="CREATE USER 'mysql'@'%' IDENTIFIED BY 'pass'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION; USE wordpress; FLUSH PRIVILEGES;"
+
+# Start Telegraf and sleep infinity for avoid container to stop.
+sleep infinite

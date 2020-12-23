@@ -4,10 +4,10 @@ metadata:
   name: influxdb-secrets
 type: Opaque
 stringData:
-  INFLUXDB_DATABASE: local_monitoring
+  INFLUXDB_DATABASE: influxdb
   INFLUXDB_USER: user
   INFLUXDB_USER_PASSWORD: pass
-  INFLUXDB_HOST: influxdb
+  INFLUXDB_HOST: influxdb-svc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -25,11 +25,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: influx-svc
+  name: influxdb-svc
 spec:
   type: ClusterIP
   selector:
-    app: influx
+    app: influxdb
   ports:
   - protocol: TCP
     port: 8086
@@ -68,17 +68,21 @@ spec:
         image: influxdb-image
         imagePullPolicy: Never
         name: influxdb
-        resources: {}
         ports:
         - containerPort: 8086
         volumeMounts:
         - mountPath: /var/lib/influxdb
-          name: var-lib-influxdb
+          name: influxdb
+        - name: dockersock
+          mountPath: /var/run/docker.sock
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: var-lib-influxdb
+      - name: influxdb
         persistentVolumeClaim:
           claimName: influxdb-pvc
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock

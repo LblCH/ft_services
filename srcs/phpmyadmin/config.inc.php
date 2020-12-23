@@ -14,13 +14,13 @@ $i = 1;
 /* Authentication type */
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */
-$cfg['Servers'][$i]['host'] = 'mysql-service';
+$cfg['Servers'][$i]['host'] = 'mysql-svc:3306';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = false;
 
-$cfg['Servers'][$i]['port'] = '3306';
-$cfg['Servers'][$i]['user'] = 'mysql';
-$cfg['Servers'][$i]['password'] = 'pass';
+// $cfg['Servers'][$i]['port'] = '3306';
+// $cfg['Servers'][$i]['user'] = 'mysql';
+// $cfg['Servers'][$i]['password'] = 'pass';
 
 /* Directories for saving/loading files from server */
 $cfg['UploadDir'] = '';

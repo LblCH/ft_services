@@ -4,9 +4,7 @@ FROM alpine:latest
 RUN apk update && apk upgrade
 RUN apk add wget
 
-RUN wget https://dl.grafana.com/oss/release/grafana-7.3.4.linux-amd64.tar.gz \
-	&& tar -zxvf grafana-7.3.4.linux-amd64.tar.gz
+RUN apk add grafana --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --no-cache
+COPY ./grafana.db /usr/share/grafana/data/
 
-WORKDIR	./grafana-7.3.4/bin/
-
-ENTRYPOINT	./grafana-server
+CMD /usr/sbin/grafana-server --homepath=/usr/share/grafana
